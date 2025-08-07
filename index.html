@@ -1,134 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>+258 Solution - Pagamentos M-Pesa e eMola</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        header {
-            background-color: #2e86de;
-            color: white;
-            padding: 20px;
-        }
-        h1 {
-            margin: 0;
-        }
-        section {
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
-        }
-        .produto {
-            background: #f1f1f1;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-size: 18px;
-        }
-        .pagamento {
-            background: #fff8e1;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        form {
-            text-align: left;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 6px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        button {
-            width: 100%;
-            background-color: #2e86de;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        button:hover {
-            background-color: #1e5bb8;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login e Dashboard</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    .container { max-width: 400px; margin: 40px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+    .hidden { display: none; }
+    h2 { text-align: center; }
+    input, button, select {
+      width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: 1px solid #ccc;
+    }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    nav { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    nav button { background: #28a745; }
+  </style>
 </head>
 <body>
 
-<header>
-    <h1>+258 Solution</h1>
-    <p>Pague via M-Pesa ou eMola</p>
-</header>
+<div class="container" id="login-screen">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="senha" placeholder="Senha" />
+  <button onclick="login()">Entrar</button>
+  <p id="erro" style="color:red; text-align:center;"></p>
+</div>
 
-<section>
-    <h2>Produto</h2>
-    <div class="produto">🍰 Bolo no Pote — 250 MZN</div>
-
-    <h2>Formas de Pagamento</h2>
-    <div class="pagamento">
-        📱 <strong>M-Pesa:</strong> 84 902 9376<br>
-        📱 <strong>eMola:</strong> 87 041 9940
-    </div>
-
-    <h2>Confirme seu pagamento</h2>
-    <form onsubmit="enviarWhatsApp(); return false;">
-        <label>Nome completo</label>
-        <input type="text" id="nome" required>
-
-        <label>Telefone</label>
-        <input type="text" id="telefone" required>
-
-        <label>Método de pagamento</label>
-        <select id="metodo" required>
-            <option value="">Selecione</option>
-            <option value="M-Pesa">M-Pesa</option>
-            <option value="eMola">eMola</option>
-        </select>
-
-        <label>Valor pago (MZN)</label>
-        <input type="number" id="valor" value="250" required>
-
-        <label>Código da transação</label>
-        <input type="text" id="codigo" placeholder="Ex: 5T34R8K9" required>
-
-        <label>Data e hora do pagamento</label>
-        <input type="text" id="datahora" placeholder="Ex: 04/08/2025 - 14:35" required>
-
-        <button type="submit">Enviar Comprovativo no WhatsApp</button>
-    </form>
-</section>
+<div class="container hidden" id="dashboard">
+  <h2>🎯 Dashboard</h2>
+  <nav>
+    <button onclick="alert('Em breve')">📦 Meus Produtos</button>
+    <button onclick="alert('Em breve')">💰 Minhas Vendas</button>
+    <button onclick="alert('Em breve')">💳 Checkout</button>
+    <button onclick="alert('Em breve')">🗃️ Relatórios</button>
+    <button onclick="logout()" style="background:#dc3545">🚪 Sair</button>
+  </nav>
+</div>
 
 <script>
-function enviarWhatsApp() {
-    let nome = document.getElementById("nome").value;
-    let telefone = document.getElementById("telefone").value;
-    let metodo = document.getElementById("metodo").value;
-    let valor = document.getElementById("valor").value;
-    let codigo = document.getElementById("codigo").value;
-    let datahora = document.getElementById("datahora").value;
+  function login() {
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    const erro = document.getElementById('erro');
 
-    let mensagem = `Olá! Meu nome é ${nome}, telefone ${telefone}. Paguei ${valor} MZN via ${metodo} pelo Bolo no Pote.
-Código da transação: ${codigo}
-Data/Hora: ${datahora}
-Segue meu comprovativo: `;
+    if (email === 'admin@teste.com' && senha === '1234') {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      erro.textContent = '';
+    } else {
+      erro.textContent = 'Email ou senha incorretos!';
+    }
+  }
 
-    let url = `https://wa.me/258849029376?text=${encodeURIComponent(mensagem)}`;
-    window.open(url, "_blank");
-}
+  function logout() {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('email').value = '';
+    document.getElementById('senha').value = '';
+  }
 </script>
 
 </body>
