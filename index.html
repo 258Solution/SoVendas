@@ -1,372 +1,196 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vendoo - Plataforma Infoprodutos (Firebase)</title>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f7; margin:0; padding:20px; }
-    .card { background:#fff; border-radius:10px; padding:18px; max-width:980px; margin:12px auto; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-    input, button, select { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; }
-    button { background:#111; color:#fff; cursor:pointer; }
-    nav { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
-    nav button { width:auto; padding:8px 12px; }
-    table { width:100%; border-collapse:collapse; margin-top:10px; }
-    th, td { border:1px solid #eee; padding:8px; text-align:left; }
-    .small { font-size:0.9rem; color:#555; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulação Vendoo JS</title>
+<style>
+  body { font-family: Arial; background:#f5f5f7; padding:20px; }
+  .card { background:#fff; border-radius:10px; padding:20px; max-width:800px; margin:10px auto; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+  input, button, select { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; }
+  button { background:#111; color:#fff; cursor:pointer; }
+  nav { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
+  nav button { width:auto; padding:8px 12px; }
+  table { width:100%; border-collapse:collapse; margin-top:10px; }
+  th, td { border:1px solid #eee; padding:8px; text-align:left; }
+  .small { font-size:0.9rem; color:#555; }
+</style>
 </head>
 <body>
 
-  <div class="card" id="topCard">
-    <h2>Vendoo — Plataforma Infoprodutos</h2>
-    <div id="authUI">
-      <div id="criarIDCard">
-        <h3>Criar ID</h3>
-        <input id="novoID" placeholder="Crie um ID (ex: meuNegocio01)" />
-        <button id="btnCriarID">Registrar ID</button>
-      </div>
-
-      <hr />
-
-      <div id="entrarCard">
-        <h3>Entrar com ID</h3>
-        <input id="loginID" placeholder="Digite seu ID" />
-        <button id="btnEntrar">Entrar</button>
-      </div>
-    </div>
-
-    <div id="userArea" style="display:none;">
-      <p class="small">Logado como <b id="userIdDisplay"></b></p>
-      <nav>
-        <button data-page="dashboard">Dashboard</button>
-        <button data-page="produtos">Produtos</button>
-        <button data-page="criarProduto">Criar Produto</button>
-        <button data-page="checkout">Checkout</button>
-        <button id="btnSair">Sair</button>
-      </nav>
-    </div>
+<div class="card" id="authCard">
+  <h2>Vendoo JS — Plataforma Simulada</h2>
+  <div id="criarIDCard">
+    <h3>Criar ID</h3>
+    <input id="novoID" placeholder="Crie um ID (ex: meuNegocio01)" />
+    <button id="btnCriarID">Registrar ID</button>
   </div>
-
-  <div class="card page" id="dashboardPage" style="display:none;">
-    <h3>Dashboard</h3>
-    <p><b>Faturamento:</b> <span id="fat">0</span> MZN</p>
-    <p><b>Vendas realizadas:</b> <span id="vendasCount">0</span></p>
-    <p><b>Ticket médio:</b> <span id="ticketMedio">0</span> MZN</p>
-    <p><b>Visitas (base para conversão):</b> <span id="visitas">0</span></p>
-    <p><b>Taxa de conversão:</b> <span id="conversao">0%</span></p>
+  <hr>
+  <div id="entrarCard">
+    <h3>Entrar com ID</h3>
+    <input id="loginID" placeholder="Digite seu ID" />
+    <button id="btnEntrar">Entrar</button>
   </div>
+</div>
 
-  <div class="card page" id="produtosPage" style="display:none;">
-    <h3>Produtos</h3>
-    <button id="btnCriarProdutoNav">+ Criar Produto</button>
-    <table>
-      <thead><tr><th>Nome</th><th>Preço (MZN)</th><th>Ações</th></tr></thead>
-      <tbody id="prodList"></tbody>
-    </table>
-  </div>
+<div class="card" id="userArea" style="display:none;">
+  <p class="small">Logado como <b id="userIdDisplay"></b></p>
+  <nav>
+    <button data-page="dashboard">Dashboard</button>
+    <button data-page="produtos">Produtos</button>
+    <button data-page="criarProduto">Criar Produto</button>
+    <button data-page="checkout">Checkout</button>
+    <button id="btnSair">Sair</button>
+  </nav>
+</div>
 
-  <div class="card page" id="criarProdutoPage" style="display:none;">
-    <h3>Novo Produto</h3>
-    <input id="prodNome" placeholder="Nome do produto" />
-    <input id="prodPreco" placeholder="Preço (número)" type="number" />
-    <button id="btnSalvarProd">Salvar produto</button>
-  </div>
+<div class="card page" id="dashboardPage" style="display:none;">
+  <h3>Dashboard</h3>
+  <p><b>Faturamento:</b> <span id="fat">0</span></p>
+  <p><b>Vendas realizadas:</b> <span id="vendasCount">0</span></p>
+  <p><b>Ticket médio:</b> <span id="ticketMedio">0</span></p>
+  <p><b>Taxa de conversão:</b> <span id="conversao">0%</span></p>
+</div>
 
-  <div class="card page" id="checkoutPage" style="display:none;">
-    <h3>Checkout</h3>
-    <p class="small">Escolha um produto para simular uma venda (quando o cliente clicar em Enviar a venda será contabilizada).</p>
-    <select id="checkoutProduto"></select>
-    <button id="btnEnviarVenda">Enviar (registrar venda)</button>
-    <p id="checkoutMsg" class="small"></p>
-  </div>
+<div class="card page" id="produtosPage" style="display:none;">
+  <h3>Produtos</h3>
+  <button id="btnCriarProdutoNav">+ Criar Produto</button>
+  <table>
+    <thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead>
+    <tbody id="prodList"></tbody>
+  </table>
+</div>
 
-  <!-- Firebase + App logic -->
-  <script type="module">
-    // ------------- CONFIG (já com a configuração que enviaste) -------------
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import {
-      getFirestore, doc, setDoc, getDoc, collection, addDoc,
-      query, where, getDocs, onSnapshot, serverTimestamp, updateDoc, increment
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+<div class="card page" id="criarProdutoPage" style="display:none;">
+  <h3>Novo Produto</h3>
+  <input id="prodNome" placeholder="Nome do produto" />
+  <input id="prodPreco" placeholder="Preço (número)" type="number" />
+  <button id="btnSalvarProd">Salvar produto</button>
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDN6WD6rxB7CqqK-OMRTkzJlSz-xNbe_Ks",
-      authDomain: "xavamoz.firebaseapp.com",
-      projectId: "xavamoz",
-      storageBucket: "xavamoz.firebasestorage.app",
-      messagingSenderId: "681441008756",
-      appId: "1:681441008756:web:433985ef3f374672b78521"
-    };
+<div class="card page" id="checkoutPage" style="display:none;">
+  <h3>Checkout</h3>
+  <p class="small">Insira o valor da venda e clique Enviar</p>
+  <input id="checkoutValor" type="number" placeholder="Valor da venda" />
+  <button id="btnEnviarVenda">Enviar</button>
+  <p id="checkoutMsg" class="small"></p>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<script>
+  // ------------------ UTILITÁRIOS ------------------
+  let users = JSON.parse(localStorage.getItem('vendoo_users')||'{}');
+  let currentUserId = null;
 
-    // ------------- UI hooks -------------
-    const novoID = document.getElementById('novoID');
-    const btnCriarID = document.getElementById('btnCriarID');
-    const loginID = document.getElementById('loginID');
-    const btnEntrar = document.getElementById('btnEntrar');
-    const userArea = document.getElementById('userArea');
-    const authUI = document.getElementById('authUI');
-    const userIdDisplay = document.getElementById('userIdDisplay');
-    const pages = document.querySelectorAll('.page');
-    const navButtons = document.querySelectorAll('nav button[data-page]');
-    const btnSair = document.getElementById('btnSair');
+  const saveUsers = () => localStorage.setItem('vendoo_users', JSON.stringify(users));
 
-    const prodList = document.getElementById('prodList');
-    const btnCriarProdutoNav = document.getElementById('btnCriarProdutoNav');
-    const prodNome = document.getElementById('prodNome');
-    const prodPreco = document.getElementById('prodPreco');
-    const btnSalvarProd = document.getElementById('btnSalvarProd');
+  const showPage = (id) => {
+    document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+    document.getElementById(id+'Page').style.display='block';
+  };
 
-    const checkoutProduto = document.getElementById('checkoutProduto');
-    const btnEnviarVenda = document.getElementById('btnEnviarVenda');
-    const checkoutMsg = document.getElementById('checkoutMsg');
+  const atualizarDashboard = () => {
+    if(!currentUserId) return;
+    const user = users[currentUserId];
+    const vendas = user.sales || [];
+    const fat = vendas.reduce((s,v)=>s+v,0);
+    const count = vendas.length;
+    const ticket = count ? (fat/count).toFixed(2) : '0.00';
+    const conversao = user.visits ? ((count/user.visits)*100).toFixed(2) : 0;
+    document.getElementById('fat').innerText = fat.toFixed(2);
+    document.getElementById('vendasCount').innerText = count;
+    document.getElementById('ticketMedio').innerText = ticket;
+    document.getElementById('conversao').innerText = conversao+'%';
+  };
 
-    const fatEl = document.getElementById('fat');
-    const vendasCountEl = document.getElementById('vendasCount');
-    const ticketMedioEl = document.getElementById('ticketMedio');
-    const visitasEl = document.getElementById('visitas');
-    const conversaoEl = document.getElementById('conversao');
+  const atualizarProdutosUI = () => {
+    if(!currentUserId) return;
+    const tbody = document.getElementById('prodList');
+    tbody.innerHTML='';
+    const selectCheckout = document.getElementById('checkoutProduto');
+    if(selectCheckout) selectCheckout.innerHTML='';
+    const prods = users[currentUserId].products || [];
+    prods.forEach((p,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${p.name}</td><td>${p.price}</td><td><button onclick="excluirProd(${i})">Excluir</button></td>`;
+      tbody.appendChild(tr);
+    });
+  };
 
-    let currentUserId = null;
-    let salesUnsub = null;
-    let productsUnsub = null;
-    let userUnsub = null;
+  const excluirProd = (index)=>{
+    users[currentUserId].products.splice(index,1);
+    saveUsers();
+    atualizarProdutosUI();
+  };
 
-    // ------------- helpers -------------
-    function showPage(id) {
-      pages.forEach(p => p.style.display = 'none');
-      document.getElementById(id + 'Page').style.display = 'block';
-    }
+  // ------------------ AUTENTICAÇÃO ------------------
+  document.getElementById('btnCriarID').onclick = ()=>{
+    const id = document.getElementById('novoID').value.trim();
+    if(!id) return alert('Digite um ID');
+    if(users[id]) return alert('ID já existe');
+    users[id]={products:[], sales:[], visits:0};
+    saveUsers();
+    alert('ID criado! Agora entre com ele.');
+    document.getElementById('novoID').value='';
+  };
 
-    function showLoggedInUI(id) {
-      authUI.style.display = 'none';
-      userArea.style.display = 'block';
-      userIdDisplay.innerText = id;
-      document.querySelectorAll('nav button[data-page]').forEach(btn => {
-        btn.onclick = () => showPage(btn.dataset.page);
-      });
-    }
+  document.getElementById('btnEntrar').onclick = ()=>{
+    const id = document.getElementById('loginID').value.trim();
+    if(!id || !users[id]) return alert('ID não encontrado');
+    currentUserId = id;
+    document.getElementById('authCard').style.display='none';
+    document.getElementById('userArea').style.display='block';
+    document.getElementById('userIdDisplay').innerText = id;
+    showPage('dashboard');
+    atualizarDashboard();
+    atualizarProdutosUI();
+  };
 
-    function signOut() {
-      currentUserId = null;
-      authUI.style.display = 'block';
-      userArea.style.display = 'none';
-      if (salesUnsub) salesUnsub();
-      if (productsUnsub) productsUnsub();
-      if (userUnsub) userUnsub();
-    }
+  document.getElementById('btnSair').onclick = ()=>{
+    currentUserId=null;
+    document.getElementById('authCard').style.display='block';
+    document.getElementById('userArea').style.display='none';
+  };
 
-    // ------------- Auth by ID (no email) -------------
-    btnCriarID.onclick = async () => {
-      const id = novoID.value.trim();
-      if (!id) return alert('Digite um ID válido');
-      // cria documento user se não existir
-      const userRef = doc(db, 'users', id);
-      const snap = await getDoc(userRef);
-      if (snap.exists()) {
-        alert('ID já existe. Escolha outro.');
-        return;
+  // ------------------ NAV ------------------
+  document.querySelectorAll('nav button[data-page]').forEach(btn=>{
+    btn.onclick=()=>{
+      const page=btn.dataset.page;
+      showPage(page);
+      if(page==='produtos'){
+        users[currentUserId].visits = (users[currentUserId].visits||0)+1;
+        saveUsers();
+        atualizarDashboard();
       }
-      await setDoc(userRef, {
-        createdAt: serverTimestamp(),
-        visits: 0,
-        displayName: id
-      });
-      alert('ID criado. Agora entra com o ID.');
-      novoID.value = '';
     };
+  });
 
-    btnEntrar.onclick = async () => {
-      const id = loginID.value.trim();
-      if (!id) return alert('Digite o ID');
-      const userRef = doc(db, 'users', id);
-      const snap = await getDoc(userRef);
-      if (!snap.exists()) return alert('ID não encontrado. Registe primeiro.');
-      currentUserId = id;
-      showLoggedInUI(id);
-      showPage('dashboard');
-      setupRealtimeListeners();
-      // incrementar visitas à página de produtos (para cálculo de conversão)
-      // vamos incrementar quando ele abrir a página produtos; aqui só setamos listeners
-    };
+  // ------------------ PRODUTOS ------------------
+  document.getElementById('btnCriarProdutoNav').onclick = ()=>showPage('criarProduto');
+  document.getElementById('btnSalvarProd').onclick = ()=>{
+    const nome = document.getElementById('prodNome').value.trim();
+    const preco = Number(document.getElementById('prodPreco').value);
+    if(!nome || !preco) return alert('Preencha nome e preço');
+    users[currentUserId].products.push({name:nome, price:preco});
+    saveUsers();
+    document.getElementById('prodNome').value='';
+    document.getElementById('prodPreco').value='';
+    showPage('produtos');
+    atualizarProdutosUI();
+  };
 
-    btnSair.onclick = () => {
-      signOut();
-    };
+  // ------------------ CHECKOUT ------------------
+  document.getElementById('btnEnviarVenda').onclick = ()=>{
+    const valor = Number(document.getElementById('checkoutValor').value);
+    if(!valor) return alert('Digite valor da venda');
+    if(!users[currentUserId].sales) users[currentUserId].sales=[];
+    users[currentUserId].sales.push(valor);
+    saveUsers();
+    document.getElementById('checkoutValor').value='';
+    document.getElementById('checkoutMsg').innerText='Venda registrada com sucesso!';
+    atualizarDashboard();
+  };
 
-    // ------------- Produtos -------------
-    btnSalvarProd.onclick = async () => {
-      if (!currentUserId) return alert('Entrar primeiro');
-      const nome = prodNome.value.trim();
-      const preco = Number(prodPreco.value);
-      if (!nome || !preco) return alert('Preencha nome e preço');
-      await addDoc(collection(db, 'products'), {
-        name: nome,
-        price: preco,
-        ownerId: currentUserId,
-        createdAt: serverTimestamp()
-      });
-      prodNome.value = ''; prodPreco.value = '';
-      showPage('produtos');
-    };
-
-    btnCriarProdutoNav.onclick = () => showPage('criarProduto');
-
-    // ------------- Checkout / Venda -------------
-    btnEnviarVenda.onclick = async () => {
-      if (!currentUserId) return alert('Entrar primeiro');
-      const productId = checkoutProduto.value;
-      if (!productId) return alert('Escolha um produto');
-      // obter dados do produto
-      const pDoc = await getDoc(doc(db, 'products', productId));
-      if (!pDoc.exists()) return alert('Produto não encontrado');
-      const p = pDoc.data();
-      // registrar venda
-      await addDoc(collection(db, 'sales'), {
-        ownerId: currentUserId,
-        productId: productId,
-        price: p.price,
-        createdAt: serverTimestamp()
-      });
-      checkoutMsg.innerText = 'Venda registrada com sucesso!';
-    };
-
-    // ------------- Real-time updates (dashboard / produtos) -------------
-    function setupRealtimeListeners() {
-      if (!currentUserId) return;
-
-      // listener para produtos do user
-      const productsQuery = query(collection(db, 'products'), where('ownerId', '==', currentUserId));
-      if (productsUnsub) productsUnsub();
-      productsUnsub = onSnapshot(productsQuery, snap => {
-        prodList.innerHTML = '';
-        checkoutProduto.innerHTML = '';
-        snap.forEach(docSnap => {
-          const p = docSnap.data();
-          const id = docSnap.id;
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${p.name}</td><td>${p.price}</td><td><button data-id="${id}" class="delBtn">Excluir</button></td>`;
-          prodList.appendChild(tr);
-          const opt = document.createElement('option');
-          opt.value = id;
-          opt.text = `${p.name} - ${p.price} MZN`;
-          checkoutProduto.appendChild(opt);
-        });
-        // delegação de evento para exclusão (simples)
-        document.querySelectorAll('.delBtn').forEach(b => {
-          b.onclick = async (e) => {
-            const id = e.target.dataset.id;
-            if (!confirm('Excluir produto?')) return;
-            await updateDoc(doc(db, 'products', id), { deletedAt: serverTimestamp() });
-            // nota: para realmente remover, substitua updateDoc por deleteDoc se preferir.
-          };
-        });
-      });
-
-      // listener para vendas do user
-      const salesQuery = query(collection(db, 'sales'), where('ownerId', '==', currentUserId));
-      if (salesUnsub) salesUnsub();
-      salesUnsub = onSnapshot(salesQuery, snap => {
-        const vendas = [];
-        snap.forEach(s => vendas.push({ id: s.id, ...s.data() }));
-        atualizarDashboardFromData(vendas);
-      });
-
-      // listener para o documento do user (visitas etc)
-      const userRef = doc(db, 'users', currentUserId);
-      if (userUnsub) userUnsub();
-      userUnsub = onSnapshot(userRef, snap => {
-        if (!snap.exists()) return;
-        const data = snap.data();
-        visitasEl.innerText = data.visits || 0;
-      });
-    }
-
-    // calcula e escreve no dashboard
-    async function atualizarDashboardFromData(vendas) {
-      const count = vendas.length;
-      const total = vendas.reduce((s, v) => s + (v.price || 0), 0);
-      const ticket = count ? (total / count).toFixed(2) : '0.00';
-
-      fatEl.innerText = total.toFixed ? total.toFixed(2) : total;
-      vendasCountEl.innerText = count;
-      ticketMedioEl.innerText = ticket;
-
-      // taxa de conversão = vendas / visitas * 100
-      const userRef = doc(db, 'users', currentUserId);
-      const uSnap = await getDoc(userRef);
-      const visits = (uSnap.exists() && uSnap.data().visits) ? uSnap.data().visits : 0;
-      const conv = visits ? ((count / visits) * 100).toFixed(2) : '0.00';
-      conversaoEl.innerText = conv + '%';
-    }
-
-    // ------------- Incrementar visitas (quando vendedor abre a página de produtos) -------------
-    // vamos incrementar visits quando o user abrir a page 'produtos'
-    document.getElementById('produtosPage').addEventListener('show', () => {
-      // not used: custom event. We'll instead increment on button click to open produtos
-    });
-    btnCriarProdutoNav.addEventListener('click', () => {
-      // showPage handled earlier
-    });
-
-    // Intercept nav button to increment visits when opening produtos
-    navButtons.forEach(btn => {
-      if (btn.dataset.page === 'produtos') {
-        btn.addEventListener('click', async () => {
-          showPage('produtos');
-          if (!currentUserId) return;
-          const userRef = doc(db, 'users', currentUserId);
-          try {
-            await updateDoc(userRef, { visits: increment(1) });
-          } catch (err) {
-            // se o campo não existir, setDoc fallback:
-            const snap = await getDoc(userRef);
-            if (!snap.exists()) {
-              await setDoc(userRef, { visits: 1 }, { merge: true });
-            } else {
-              // fallback: set visits explicitamente
-              const v = (snap.data().visits || 0) + 1;
-              await updateDoc(userRef, { visits: v });
-            }
-          }
-        });
-      }
-    });
-
-    // basic nav handling for other buttons
-    document.querySelector('nav button[data-page="dashboard"]').addEventListener('click', () => showPage('dashboard'));
-    document.querySelector('nav button[data-page="criarProduto"]').addEventListener('click', () => showPage('criarProduto'));
-    document.querySelector('nav button[data-page="checkout"]').addEventListener('click', () => showPage('checkout'));
-
-    // ------------- initial small UX: keep user logged in via localStorage -------------
-    // (optional) store currentUserId
-    window.addEventListener('load', () => {
-      const saved = localStorage.getItem('vendoo_userId');
-      if (saved) {
-        loginID.value = saved;
-        btnEntrar.click();
-        // after successful login listeners will set UI
-        currentUserId = saved;
-        userIdDisplay.innerText = saved;
-        authUI.style.display = 'none';
-        userArea.style.display = 'block';
-        setupRealtimeListeners();
-      }
-    });
-
-    // when user logs in, save to localStorage
-    btnEntrar.addEventListener('click', () => {
-      if (loginID.value.trim()) localStorage.setItem('vendoo_userId', loginID.value.trim());
-    });
-    btnSair.addEventListener('click', () => {
-      localStorage.removeItem('vendoo_userId');
-      signOut();
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
