@@ -2,185 +2,118 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Calculadora de Juros</title>
+<title>Pedido de Empréstimo</title>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #4a00e0, #8e2de2);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #333;
-    }
-
-    .card {
-        background: #fff;
-        width: 400px;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        animation: fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: 600;
-        color: #4a00e0;
-    }
-
-    label {
-        font-size: 15px;
-        margin-top: 15px;
-        display: block;
-        font-weight: 500;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        border: 2px solid #ddd;
-        border-radius: 10px;
-        font-size: 16px;
-        outline: none;
-        transition: 0.3s;
-    }
-
-    input:focus {
-        border-color: #8e2de2;
-    }
-
-    button {
-        width: 100%;
-        padding: 14px;
-        margin-top: 15px;
-        border: none;
-        background: linear-gradient(135deg, #4a00e0, #8e2de2);
-        color: white;
-        border-radius: 10px;
-        font-size: 17px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    button:hover {
-        opacity: 0.85;
-        transform: scale(1.02);
-    }
-
-    .resultado {
-        background: #f8f4ff;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
-        font-size: 16px;
-        font-weight: 500;
-        color: #4a00e0;
-        display: none;
-    }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+.card {
+    background: #fff;
+    width: 260px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #4a00e0;
+}
+label {
+    font-size: 15px;
+    margin-top: 15px;
+    display: block;
+    font-weight: 500;
+}
+input {
+    width: 95%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+input:focus { border-color: #8e2de2; }
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    border: none;
+    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    color: white;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+}
 </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Calculadora de Juros (15% ao mês)</h2>
+<h2>Pedido de Empréstimo</h2>
 
-    <label>Nome do cliente:</label>
-    <input type="text" id="nome" placeholder="ex: João Alberto">
+<label>Nome do cliente:</label>
+<input type="text" id="nome" placeholder="ex: João Alberto">
 
-    <label>Número de celular:</label>
-    <input type="text" id="telefone" placeholder="ex: 84 000 0000">
+<label>Número de celular:</label>
+<input type="text" id="telefone" placeholder="ex: 84 000 0000">
 
-    <label>Localização:</label>
-    <input type="text" id="local" placeholder="ex: Maputo, Matola">
+<label>Localização:</label>
+<input type="text" id="local" placeholder="ex: Maputo, Matola">
 
-    <label>Valor emprestado (MZN):</label>
-    <input type="number" id="valor" placeholder="ex: 5000">
+<label>Valor emprestado (MZN):</label>
+<input type="number" id="valor" placeholder="ex: 5000">
 
-    <label>Meses:</label>
-    <input type="number" id="meses" placeholder="ex: 3">
+<label>Meses:</label>
+<input type="number" id="meses" placeholder="ex: 3">
 
-    <button onclick="calcular()">Calcular</button>
-    <button onclick="gerarPDF()">Gerar PDF do Contrato</button>
-
-    <div class="resultado" id="resultado"></div>
+<button onclick="enviarWhatsApp()">Enviar para WhatsApp</button>
 </div>
 
-<!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
-function calcular() {
+function enviarWhatsApp() {
     let nome = document.getElementById("nome").value;
     let telefone = document.getElementById("telefone").value;
     let local = document.getElementById("local").value;
-    let valor = parseFloat(document.getElementById("valor").value);
-    let meses = parseInt(document.getElementById("meses").value);
+    let valor = document.getElementById("valor").value;
+    let meses = document.getElementById("meses").value;
     let juros = 0.15;
+    let total = (valor * (1 + juros * meses)).toFixed(2);
 
-    if (!nome || !telefone || !local || isNaN(valor) || isNaN(meses)) {
+    if (!nome || !telefone || !local || !valor || !meses) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    let total = valor * (1 + juros * meses);
+    // Número da empresa (Moçambique)
+    let numeroEmpresa = "258870419940";
 
-    let box = document.getElementById("resultado");
-    box.style.display = "block";
-    box.innerHTML =
-        "<strong>📌 Dados do Cliente</strong><br>" +
-        "👤 Nome: " + nome + "<br>" +
-        "📞 Telefone: " + telefone + "<br>" +
-        "📍 Localização: " + local + "<br><br>" +
-        "<strong>💵 Valor emprestado:</strong> " + valor.toFixed(2) + " MZN<br>" +
-        "<strong>⏳ Prazo:</strong> " + meses + " meses<br>" +
-        "<strong>💰 Total a pagar:</strong> " + total.toFixed(2) + " MZN";
-}
+    let mensagem = `📝 *Novo Pedido de Empréstimo*%0A` +
+                   `👤 Nome: ${nome}%0A` +
+                   `📞 Telefone: ${telefone}%0A` +
+                   `📍 Localização: ${local}%0A` +
+                   `💵 Valor emprestado: ${valor} MZN%0A` +
+                   `⏳ Prazo: ${meses} meses%0A` +
+                   `💰 Total a pagar: ${total} MZN`;
 
-function gerarPDF() {
-    const { jsPDF } = window.jspdf;
-
-    let nome = document.getElementById("nome").value;
-    let telefone = document.getElementById("telefone").value;
-    let local = document.getElementById("local").value;
-    let valor = parseFloat(document.getElementById("valor").value);
-    let meses = parseInt(document.getElementById("meses").value);
-    let juros = 0.15;
-    let total = valor * (1 + juros * meses);
-
-    if (!nome || !telefone || !local || isNaN(valor) || isNaN(meses)) {
-        alert("Preencha todos os campos antes de gerar o PDF!");
-        return;
-    }
-
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text("Contrato de Empréstimo", 105, 20, null, null, "center");
-
-    doc.setFontSize(12);
-    doc.text(`Nome do Cliente: ${nome}`, 20, 40);
-    doc.text(`Telefone: ${telefone}`, 20, 50);
-    doc.text(`Localização: ${local}`, 20, 60);
-    doc.text(`Valor emprestado: ${valor.toFixed(2)} MZN`, 20, 70);
-    doc.text(`Prazo: ${meses} meses`, 20, 80);
-    doc.text(`Juros: 15% ao mês`, 20, 90);
-    doc.text(`Total a pagar: ${total.toFixed(2)} MZN`, 20, 100);
-
-    doc.text("Assinatura do Cliente: ____________________", 20, 130);
-    doc.text("Assinatura do Credor: ____________________", 20, 150);
-
-    doc.save(`Contrato_${nome}.pdf`);
+    let url = `https://wa.me/${numeroEmpresa}?text=${mensagem}`;
+    window.open(url, "_blank");
 }
 </script>
 
