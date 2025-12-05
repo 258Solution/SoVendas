@@ -1,75 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Secreto</title>
-<link rel="stylesheet" href="style.css">
-<script src="app.js"></script>
+    <meta charset="UTF-8">
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Painel Administrativo</h1>
 
-<div id="login" class="card">
-<h2>Entrar no Painel</h2>
-<label>Senha:</label>
-<input type="password" id="senha">
-<button onclick="entrar()">Entrar</button>
-</div>
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Contacto</th>
+                <th>Local</th>
+                <th>Valor</th>
+                <th>Meses</th>
+                <th>Total a pagar</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-<div id="painel" class="table-card card" style="display:none;">
-<h2>Gerenciador de Empréstimos</h2>
-
-<table>
-<thead>
-<tr>
-<th>Nome</th>
-<th>Telefone</th>
-<th>Valor</th>
-<th>Meses</th>
-<th>Total</th>
-<th>Empréstimo</th>
-<th>Pagamento</th>
-<th>Ações</th>
-</tr>
-</thead>
-<tbody id="lista"></tbody>
-</table>
-
-<button onclick="limparTudo(); mostrar();">Apagar Tudo</button>
-</div>
-
-<script>
-function entrar() {
-    if (document.getElementById("senha").value === "admin123") {
-        login.style.display = "none";
-        painel.style.display = "block";
-        mostrar();
-    } else {
-        alert("Senha incorreta");
-    }
-}
-
-function mostrar() {
-    let dados = carregarClientes();
-    let html = "";
-
-    dados.forEach((c, i) => {
-        html += `
-        <tr>
-            <td>${c.nome}</td>
-            <td>${c.telefone}</td>
-            <td>${c.valor}</td>
-            <td>${c.meses}</td>
-            <td>${c.total}</td>
-            <td>${c.dataEmprestimo}</td>
-            <td>${c.dataPagamento}</td>
-            <td><button onclick="apagarCliente(${i}); mostrar();">X</button></td>
-        </tr>`;
-    });
-
-    lista.innerHTML = html;
-}
-</script>
-
+    <script src="app.js"></script>
 </body>
-</html>
+</html>        
