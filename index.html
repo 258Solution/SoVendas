@@ -2,194 +2,186 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulação Vendoo JS</title>
+<title>Calculadora de Juros</title>
 <style>
-  body { font-family: Arial; background:#f5f5f7; padding:20px; }
-  .card { background:#fff; border-radius:10px; padding:20px; max-width:800px; margin:10px auto; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-  input, button, select { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; }
-  button { background:#111; color:#fff; cursor:pointer; }
-  nav { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
-  nav button { width:auto; padding:8px 12px; }
-  table { width:100%; border-collapse:collapse; margin-top:10px; }
-  th, td { border:1px solid #eee; padding:8px; text-align:left; }
-  .small { font-size:0.9rem; color:#555; }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #4a00e0, #8e2de2);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #333;
+    }
+
+    .card {
+        background: #fff;
+        width: 400px;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: #4a00e0;
+    }
+
+    label {
+        font-size: 15px;
+        margin-top: 15px;
+        display: block;
+        font-weight: 500;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    input:focus {
+        border-color: #8e2de2;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        border: none;
+        background: linear-gradient(135deg, #4a00e0, #8e2de2);
+        color: white;
+        border-radius: 10px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        opacity: 0.85;
+        transform: scale(1.02);
+    }
+
+    .resultado {
+        background: #f8f4ff;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #4a00e0;
+        display: none;
+    }
 </style>
 </head>
 <body>
 
-<div class="card" id="authCard">
-  <h2>Vendoo JS — Plataforma Simulada</h2>
-  <div id="criarIDCard">
-    <h3>Criar ID</h3>
-    <input id="novoID" placeholder="Crie um ID (ex: meuNegocio01)" />
-    <button id="btnCriarID">Registrar ID</button>
-  </div>
-  <hr>
-  <div id="entrarCard">
-    <h3>Entrar com ID</h3>
-    <input id="loginID" placeholder="Digite seu ID" />
-    <button id="btnEntrar">Entrar</button>
-  </div>
+<div class="card">
+    <h2>Calculadora de Juros (15% ao mês)</h2>
+
+    <label>Nome do cliente:</label>
+    <input type="text" id="nome" placeholder="ex: João Alberto">
+
+    <label>Número de celular:</label>
+    <input type="text" id="telefone" placeholder="ex: 84 000 0000">
+
+    <label>Localização:</label>
+    <input type="text" id="local" placeholder="ex: Maputo, Matola">
+
+    <label>Valor emprestado (MZN):</label>
+    <input type="number" id="valor" placeholder="ex: 5000">
+
+    <label>Meses:</label>
+    <input type="number" id="meses" placeholder="ex: 3">
+
+    <button onclick="calcular()">Calcular</button>
+    <button onclick="gerarPDF()">Gerar PDF do Contrato</button>
+
+    <div class="resultado" id="resultado"></div>
 </div>
 
-<div class="card" id="userArea" style="display:none;">
-  <p class="small">Logado como <b id="userIdDisplay"></b></p>
-  <nav>
-    <button data-page="dashboard">Dashboard</button>
-    <button data-page="produtos">Produtos</button>
-    <button data-page="criarProduto">Criar Produto</button>
-    <button data-page="checkout">Checkout</button>
-    <button id="btnSair">Sair</button>
-  </nav>
-</div>
-
-<div class="card page" id="dashboardPage" style="display:none;">
-  <h3>Dashboard</h3>
-  <p><b>Faturamento:</b> <span id="fat">0</span></p>
-  <p><b>Vendas realizadas:</b> <span id="vendasCount">0</span></p>
-  <p><b>Ticket médio:</b> <span id="ticketMedio">0</span></p>
-  <p><b>Taxa de conversão:</b> <span id="conversao">0%</span></p>
-</div>
-
-<div class="card page" id="produtosPage" style="display:none;">
-  <h3>Produtos</h3>
-  <button id="btnCriarProdutoNav">+ Criar Produto</button>
-  <table>
-    <thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead>
-    <tbody id="prodList"></tbody>
-  </table>
-</div>
-
-<div class="card page" id="criarProdutoPage" style="display:none;">
-  <h3>Novo Produto</h3>
-  <input id="prodNome" placeholder="Nome do produto" />
-  <input id="prodPreco" placeholder="Preço (número)" type="number" />
-  <button id="btnSalvarProd">Salvar produto</button>
-</div>
-
-<div class="card page" id="checkoutPage" style="display:none;">
-  <h3>Checkout</h3>
-  <p class="small">Insira o valor da venda e clique Enviar</p>
-  <input id="checkoutValor" type="number" placeholder="Valor da venda" />
-  <button id="btnEnviarVenda">Enviar</button>
-  <p id="checkoutMsg" class="small"></p>
-</div>
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-  // ------------------ UTILITÁRIOS ------------------
-  let users = JSON.parse(localStorage.getItem('vendoo_users')||'{}');
-  let currentUserId = null;
+function calcular() {
+    let nome = document.getElementById("nome").value;
+    let telefone = document.getElementById("telefone").value;
+    let local = document.getElementById("local").value;
+    let valor = parseFloat(document.getElementById("valor").value);
+    let meses = parseInt(document.getElementById("meses").value);
+    let juros = 0.15;
 
-  const saveUsers = () => localStorage.setItem('vendoo_users', JSON.stringify(users));
+    if (!nome || !telefone || !local || isNaN(valor) || isNaN(meses)) {
+        alert("Preencha todos os campos!");
+        return;
+    }
 
-  const showPage = (id) => {
-    document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-    document.getElementById(id+'Page').style.display='block';
-  };
+    let total = valor * (1 + juros * meses);
 
-  const atualizarDashboard = () => {
-    if(!currentUserId) return;
-    const user = users[currentUserId];
-    const vendas = user.sales || [];
-    const fat = vendas.reduce((s,v)=>s+v,0);
-    const count = vendas.length;
-    const ticket = count ? (fat/count).toFixed(2) : '0.00';
-    const conversao = user.visits ? ((count/user.visits)*100).toFixed(2) : 0;
-    document.getElementById('fat').innerText = fat.toFixed(2);
-    document.getElementById('vendasCount').innerText = count;
-    document.getElementById('ticketMedio').innerText = ticket;
-    document.getElementById('conversao').innerText = conversao+'%';
-  };
+    let box = document.getElementById("resultado");
+    box.style.display = "block";
+    box.innerHTML =
+        "<strong>📌 Dados do Cliente</strong><br>" +
+        "👤 Nome: " + nome + "<br>" +
+        "📞 Telefone: " + telefone + "<br>" +
+        "📍 Localização: " + local + "<br><br>" +
+        "<strong>💵 Valor emprestado:</strong> " + valor.toFixed(2) + " MZN<br>" +
+        "<strong>⏳ Prazo:</strong> " + meses + " meses<br>" +
+        "<strong>💰 Total a pagar:</strong> " + total.toFixed(2) + " MZN";
+}
 
-  const atualizarProdutosUI = () => {
-    if(!currentUserId) return;
-    const tbody = document.getElementById('prodList');
-    tbody.innerHTML='';
-    const selectCheckout = document.getElementById('checkoutProduto');
-    if(selectCheckout) selectCheckout.innerHTML='';
-    const prods = users[currentUserId].products || [];
-    prods.forEach((p,i)=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${p.name}</td><td>${p.price}</td><td><button onclick="excluirProd(${i})">Excluir</button></td>`;
-      tbody.appendChild(tr);
-    });
-  };
+function gerarPDF() {
+    const { jsPDF } = window.jspdf;
 
-  const excluirProd = (index)=>{
-    users[currentUserId].products.splice(index,1);
-    saveUsers();
-    atualizarProdutosUI();
-  };
+    let nome = document.getElementById("nome").value;
+    let telefone = document.getElementById("telefone").value;
+    let local = document.getElementById("local").value;
+    let valor = parseFloat(document.getElementById("valor").value);
+    let meses = parseInt(document.getElementById("meses").value);
+    let juros = 0.15;
+    let total = valor * (1 + juros * meses);
 
-  // ------------------ AUTENTICAÇÃO ------------------
-  document.getElementById('btnCriarID').onclick = ()=>{
-    const id = document.getElementById('novoID').value.trim();
-    if(!id) return alert('Digite um ID');
-    if(users[id]) return alert('ID já existe');
-    users[id]={products:[], sales:[], visits:0};
-    saveUsers();
-    alert('ID criado! Agora entre com ele.');
-    document.getElementById('novoID').value='';
-  };
+    if (!nome || !telefone || !local || isNaN(valor) || isNaN(meses)) {
+        alert("Preencha todos os campos antes de gerar o PDF!");
+        return;
+    }
 
-  document.getElementById('btnEntrar').onclick = ()=>{
-    const id = document.getElementById('loginID').value.trim();
-    if(!id || !users[id]) return alert('ID não encontrado');
-    currentUserId = id;
-    document.getElementById('authCard').style.display='none';
-    document.getElementById('userArea').style.display='block';
-    document.getElementById('userIdDisplay').innerText = id;
-    showPage('dashboard');
-    atualizarDashboard();
-    atualizarProdutosUI();
-  };
+    const doc = new jsPDF();
 
-  document.getElementById('btnSair').onclick = ()=>{
-    currentUserId=null;
-    document.getElementById('authCard').style.display='block';
-    document.getElementById('userArea').style.display='none';
-  };
+    doc.setFontSize(18);
+    doc.text("Contrato de Empréstimo", 105, 20, null, null, "center");
 
-  // ------------------ NAV ------------------
-  document.querySelectorAll('nav button[data-page]').forEach(btn=>{
-    btn.onclick=()=>{
-      const page=btn.dataset.page;
-      showPage(page);
-      if(page==='produtos'){
-        users[currentUserId].visits = (users[currentUserId].visits||0)+1;
-        saveUsers();
-        atualizarDashboard();
-      }
-    };
-  });
+    doc.setFontSize(12);
+    doc.text(`Nome do Cliente: ${nome}`, 20, 40);
+    doc.text(`Telefone: ${telefone}`, 20, 50);
+    doc.text(`Localização: ${local}`, 20, 60);
+    doc.text(`Valor emprestado: ${valor.toFixed(2)} MZN`, 20, 70);
+    doc.text(`Prazo: ${meses} meses`, 20, 80);
+    doc.text(`Juros: 15% ao mês`, 20, 90);
+    doc.text(`Total a pagar: ${total.toFixed(2)} MZN`, 20, 100);
 
-  // ------------------ PRODUTOS ------------------
-  document.getElementById('btnCriarProdutoNav').onclick = ()=>showPage('criarProduto');
-  document.getElementById('btnSalvarProd').onclick = ()=>{
-    const nome = document.getElementById('prodNome').value.trim();
-    const preco = Number(document.getElementById('prodPreco').value);
-    if(!nome || !preco) return alert('Preencha nome e preço');
-    users[currentUserId].products.push({name:nome, price:preco});
-    saveUsers();
-    document.getElementById('prodNome').value='';
-    document.getElementById('prodPreco').value='';
-    showPage('produtos');
-    atualizarProdutosUI();
-  };
+    doc.text("Assinatura do Cliente: ____________________", 20, 130);
+    doc.text("Assinatura do Credor: ____________________", 20, 150);
 
-  // ------------------ CHECKOUT ------------------
-  document.getElementById('btnEnviarVenda').onclick = ()=>{
-    const valor = Number(document.getElementById('checkoutValor').value);
-    if(!valor) return alert('Digite valor da venda');
-    if(!users[currentUserId].sales) users[currentUserId].sales=[];
-    users[currentUserId].sales.push(valor);
-    saveUsers();
-    document.getElementById('checkoutValor').value='';
-    document.getElementById('checkoutMsg').innerText='Venda registrada com sucesso!';
-    atualizarDashboard();
-  };
-
+    doc.save(`Contrato_${nome}.pdf`);
+}
 </script>
 
 </body>
