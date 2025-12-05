@@ -1,72 +1,34 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pedido de Empréstimo</title>
-<link rel="stylesheet" href="style.css">
-<script src="app.js"></script>
+    <meta charset="UTF-8">
+    <title>Empréstimo — Cálculo</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Sistema de Empréstimos</h1>
 
-<div class="card">
-<h2>Pedido de Empréstimo</h2>
+    <form id="loanForm">
+        <label>Nome:</label>
+        <input type="text" id="nome" required>
 
-<label>Nome:</label>
-<input id="nome">
+        <label>Contacto:</label>
+        <input type="text" id="contacto" required>
 
-<label>Celular:</label>
-<input id="telefone">
+        <label>Localização:</label>
+        <input type="text" id="local" required>
 
-<label>Localização:</label>
-<input id="local">
+        <label>Valor emprestado:</label>
+        <input type="number" id="valor" required>
 
-<label>Valor (MZN):</label>
-<input type="number" id="valor">
+        <label>Meses:</label>
+        <input type="number" id="meses" required>
 
-<label>Meses:</label>
-<input type="number" id="meses">
+        <button type="submit">Calcular</button>
+    </form>
 
-<button onclick="processar()">Enviar WhatsApp</button>
-</div>
+    <h2 id="resultado"></h2>
 
-<script>
-function processar() {
-    let nome = document.getElementById("nome").value;
-    let telefone = document.getElementById("telefone").value;
-    let local = document.getElementById("local").value;
-    let valor = parseFloat(document.getElementById("valor").value);
-    let meses = parseInt(document.getElementById("meses").value);
-
-    if (!nome || !telefone || !local || !valor || !meses) {
-        alert("Preencha todos os campos!");
-        return;
-    }
-
-    let juros = 0.15;
-    let total = (valor * (1 + juros * meses)).toFixed(2);
-
-    let dataEmprestimo = new Date().toISOString().split("T")[0];
-    let dataPagamento = calcularDataPagamento(meses);
-
-    salvarCliente({nome, telefone, local, valor, meses, total, dataEmprestimo, dataPagamento});
-
-    let numero = "258870419940";
-    let msg =
-        `📝 *Novo Empréstimo*%0A` +
-        `👤 Nome: ${nome}%0A` +
-        `📞 Telefone: ${telefone}%0A` +
-        `📍 Localização: ${local}%0A` +
-        `💵 Valor: ${valor} MZN%0A` +
-        `📆 Meses: ${meses}%0A` +
-        `💰 Total: ${total} MZN%0A` +
-        `📅 Empréstimo: ${dataEmprestimo}%0A` +
-        `📅 Pagamento: ${dataPagamento}`;
-
-    let url = `https://wa.me/${numero}?text=${msg}`;
-    window.open(url, "_blank");
-}
-</script>
-
+    <script src="app.js"></script>
 </body>
-</html>
+</html>  
