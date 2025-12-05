@@ -39,7 +39,7 @@ function processar() {
     let meses = parseInt(document.getElementById("meses").value);
 
     if (!nome || !telefone || !local || !valor || !meses) {
-        alert("Preencha tudo!");
+        alert("Preencha todos os campos!");
         return;
     }
 
@@ -49,9 +49,7 @@ function processar() {
     let dataEmprestimo = new Date().toISOString().split("T")[0];
     let dataPagamento = calcularDataPagamento(meses);
 
-    salvarCliente({
-        nome, telefone, local, valor, meses, total, dataEmprestimo, dataPagamento
-    });
+    salvarCliente({nome, telefone, local, valor, meses, total, dataEmprestimo, dataPagamento});
 
     let numero = "258870419940";
     let msg =
